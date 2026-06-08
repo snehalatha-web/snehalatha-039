@@ -1,0 +1,71 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+// Function to get the two largest values from a given column
+void getFSMAX(long** b, int colIndex, int rows, long fsmax[2]) {
+    // Initialize with the first two elements in this column
+    long max1 = b[colIndex][0];
+    long max2 = b[colIndex][1];
+    if (max2 > max1) swap(max1, max2);
+
+    // Check the rest of the column
+    for (int i = 2; i < rows; i++) {
+        if (b[colIndex][i] > max1) {
+            max2 = max1;
+            max1 = b[colIndex][i];
+        } else if (b[colIndex][i] > max2) {
+            max2 = b[colIndex][i];
+        }
+    }
+
+    fsmax[0] = max1; // largest
+    fsmax[1] = max2; // second largest
+}
+
+int main() {
+    int r, c;
+    cin >> r >> c;
+
+    // Allocate column‑type dynamic arrays
+    long** a = new long*[c];
+    long** b = new long*[c];
+    for (int j = 0; j < c; j++) {
+        a[j] = new long[r]; // each column has r rows
+        b[j] = new long[r];
+    }
+
+    // Input matrix a (column‑major style)
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            cin >> a[j][i];
+            if (i == 0) b[j][i] = a[j][i]; // copy first row
+        }
+    }
+
+    // Fill b using DP logic (column‑wise)
+    for (int i = 1; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            long fsmax[2];
+            getFSMAX(b, j, i, fsmax); // top two values from this column up to row i‑1
+            b[j][i] = a[j][i] + (b[j][i-1] == fsmax[0] ? fsmax[1] : fsmax[0]);
+        }
+    }
+
+    // Find maximum value in the last row across all columns
+    long maxVal = b[0][r-1];
+    for (int j = 1; j < c; j++) {
+        maxVal = max(maxVal, b[j][r-1]);
+    }
+    cout << maxVal << endl;
+
+    // Free memory
+    for (int j = 0; j < c; j++) {
+        delete[] a[j];
+        delete[] b[j];
+    }
+    delete[] a;
+    delete[] b;
+
+    return 0;
+}
