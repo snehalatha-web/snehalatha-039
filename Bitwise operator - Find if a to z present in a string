@@ -1,0 +1,23 @@
+import java.util.Scanner;
+public class AllLettersCheck {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter a string: ");
+        String input = sc.nextLine().toLowerCase();
+        int mask = 0;
+        for (char ch : input.toCharArray()) {
+            if (ch >= 'a' && ch <= 'z') {
+                // Set the bit corresponding to the letter
+                mask |= (1 << (ch - 'a'));
+            }
+        }
+        // (1 << 26) - 1 => binary with 26 ones (all letters present)
+        int allLettersMask = (1 << 26) - 1;
+        if (mask == allLettersMask) {
+            System.out.println("✅ All letters from a to z are present.");
+        } else {
+            System.out.println("❌ Not all letters are present.");
+        }
+        sc.close();
+    }
+}
