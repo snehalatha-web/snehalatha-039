@@ -1,0 +1,33 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+int main(){
+  int N,M;
+  cin>>N>>M;
+  vector<int> firstItem(N);
+  vector<int> secondItem(M);
+  for(int i = 0; i <  N; i++){
+    cin>>firstItem[i];
+  }
+   for(int i = 0; i <  M; i++){
+    cin>>secondItem[i];
+  }
+  int count = 0;
+  sort(firstItem.begin(),firstItem.end());
+  sort(secondItem.begin(),secondItem.end());
+ 
+ int i=N-1;
+ int j=M-1;
+ while(i>=0 && j>=0){
+   if(secondItem[j]<=2*firstItem[i]){
+     count++;
+     i--;
+     j--;
+   }
+   else{
+     j--;
+   }
+ }
+  cout<<count;
+}
